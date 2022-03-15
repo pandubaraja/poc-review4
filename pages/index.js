@@ -6,7 +6,7 @@ export default function Home() {
   const [drafts, setDrafts] = useState([])
 
   useEffect(() => {
-    window.addEventListener('REVIEW4_SEND_DRAFT', function(e) {
+    window.addEventListener('REVIEW4_SEND_DRAFTS', function(e) {
       setDrafts([
         ...e.detail
       ])
@@ -47,44 +47,39 @@ export default function Home() {
 
         <div className="grid">
           <a className="card" onClick={handleSaveDraft}>
-            <h3>Save Draft</h3>
-            <p>
-              <div><strong>Android</strong></div>
-              <div className='code'>window.Android.saveDraft(entity)</div>
-              <div><strong>iOS</strong></div>
-              <div className='code'>window.webkit.messageHandlers.saveDraft.postMessage(entity)</div>
-            </p>
+            <h3>Save Draft (Click Card To Trigger)</h3>
+            <div><strong>Android</strong></div>
+            <div className='code'>window.Android.saveDraft(entity)</div>
+            <div><strong>iOS</strong></div>
+            <div className='code'>window.webkit.messageHandlers.saveDraft.postMessage(entity)</div>
           </a>
 
           <a className="card" onClick={handleDeleteDraft}>
-            <h3>Delete Draft</h3>
-            <p>
-              <div><strong>Android</strong></div>
-              <div className='code'>window.Android.deleteDraft(token)</div>
-              <div><strong>iOS</strong></div>
-              <div className='code'>window.webkit.messageHandlers.deleteDraft.postMessage(token)</div>
-            </p>
+            <h3>Delete Draft (Click Card To Trigger)</h3>
+            <div><strong>Android</strong></div>
+            <div className='code'>window.Android.deleteDraft(token)</div>
+            <div><strong>iOS</strong></div>
+            <div className='code'>window.webkit.messageHandlers.deleteDraft.postMessage(token)</div>
           </a>
           <a className="card">
             <h3>Custom Event</h3>
-            <p>
-              <div>Try dispatch CustomEvent <strong>REVIEW4_SEND_DRAFTS</strong></div>
+            <div>Try dispatch CustomEvent <strong>REVIEW4_SEND_DRAFTS</strong> from Native Apps or Browser Console</div>
 
-              <div className='code'>
-                  window.dispatchEvent(new CustomEvent('REVIEW4_SEND_DRAFT', &#123; 'detail': [drafts] &#125;))
-              </div>
-              <br></br>
-              <div><strong>Draft Will Be Listed Below</strong></div>
-              <div>
-                {drafts.length > 0 ? 
-                <ol>
-                  {drafts.map(item => (
-                    <li key={item.token}>{item.token} -  Average Rating: {item.averageRatingValue}</li>
-                  ))}
-                </ol> : <div className='code'>No List From CustomEvent / No Custom Event Dispatched</div>
-                }
-              </div>
-            </p>
+            <div className='code'>
+                window.dispatchEvent(new CustomEvent('REVIEW4_SEND_DRAFT', &#123; 'detail': [drafts] &#125;))
+            </div>
+            
+            <br></br>
+            <div><strong>Draft Will Be Listed Below</strong></div>
+            <div>
+              {drafts.length > 0 ? 
+              <ol>
+                {drafts.map(item => (
+                  <li key={item.token}>{item.token} -  Average Rating: {item.averageRatingValue}</li>
+                ))}
+              </ol> : <div className='code'>No List From CustomEvent / No Custom Event Dispatched</div>
+              }
+            </div>
           </a>
         </div>
       </main>
