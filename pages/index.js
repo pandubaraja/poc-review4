@@ -73,7 +73,7 @@ export default function Home() {
           </div>
 
           <div className="rounded-md shadow-md p-4 w-full bg-white">
-            <div className="text-1xl font-bold">Delete Draft (Click Card To Trigger)</div>
+            <div className="text-1xl font-bold">Delete Draft</div>
             <div className='my-2 text-sm font-bold'>Android</div>
             <code className='text-sm break-words'>window.Android.deleteDraft(token)</code>
             <div className='my-2 text-sm font-bold'>iOS</div>
