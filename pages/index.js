@@ -4,16 +4,26 @@ import { fakedraft } from '../fakedraft'
 
 export default function Home() {
   const [drafts, setDrafts] = useState([])
+  const CUSTOM_EVENT_NAME = 'REVIEW4_SEND_DRAFTS'
 
   useEffect(() => {
-    window.addEventListener('REVIEW4_SEND_DRAFTS', function(e) {
+    window.addEventListener(CUSTOM_EVENT_NAME, function(e) {
       setDrafts([
         ...e.detail
       ])
     })
   })
 
+  const handleDispatchEvent = (e) => {
+    window.dispatchEvent(new CustomEvent(CUSTOM_EVENT_NAME, { detail: [fakedraft]}))
+  }
+
+  const handleResetDrafts = (e) => {
+    setDrafts([])
+  }
+
   const handleSaveDraft = (e) => {
+    console.log('save')
     if(!!window.Android) {
       window.Android.saveDraft(fakedraft)
     }
@@ -24,6 +34,8 @@ export default function Home() {
   }
 
   const handleDeleteDraft = (e) => {
+    
+    console.log('delete')
     if(!!window.Android) {
       window.Android.deleteDraft(fakedraft.token)
     }
@@ -34,212 +46,77 @@ export default function Home() {
   }
 
   return (
-    <div className="container">
+    <div>
       <Head>
         <title>PoC Review V4</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main>
-        <h1 className="title">
-          PoC Review V4 JSI &amp; Custom Event
-        </h1>
+      <div className='container p-8 bg-slate-100'>
+        <div className="text-3xl font-bold pb-4 items-center">
+          PoC Review V4
+        </div>
 
-        <div className="grid">
-          <a className="card" onClick={handleSaveDraft}>
-            <h3>Save Draft (Click Card To Trigger)</h3>
-            <div><strong>Android</strong></div>
-            <div className='code'>window.Android.saveDraft(entity)</div>
-            <div><strong>iOS</strong></div>
-            <div className='code'>window.webkit.messageHandlers.saveDraft.postMessage(entity)</div>
-          </a>
+        <div className="flex flex-col gap-4">
+          <div className="rounded-md shadow-md p-4 w-full bg-white">
+            <div className="text-1xl font-bold">Save Draft</div>
+            <div className='my-2 text-sm font-bold'>Android</div>
+            <code className='text-sm break-words'>window.Android.saveDraft(entity)</code>
+            <div className='my-2 text-sm font-bold'>iOS</div>
+            <code className='text-sm break-words'>window.webkit.messageHandlers.saveDraft.postMessage(entity)</code>
 
-          <a className="card" onClick={handleDeleteDraft}>
-            <h3>Delete Draft (Click Card To Trigger)</h3>
-            <div><strong>Android</strong></div>
-            <div className='code'>window.Android.deleteDraft(token)</div>
-            <div><strong>iOS</strong></div>
-            <div className='code'>window.webkit.messageHandlers.deleteDraft.postMessage(token)</div>
-          </a>
-          <a className="card">
-            <h3>Custom Event</h3>
-            <div>Try dispatch CustomEvent <strong>REVIEW4_SEND_DRAFTS</strong> from Native Apps or Browser Console</div>
+            <div>
+              <button onClick={handleSaveDraft} className="rounded-md p-2 w-full mt-4 text-white bg-blue-500 hover:bg-blue-600 active:bg-blue-700">
+                Try Save Draft
+              </button>
+            </div>
+          </div>
 
-            <div className='code'>
+          <div className="rounded-md shadow-md p-4 w-full bg-white">
+            <div className="text-1xl font-bold">Delete Draft (Click Card To Trigger)</div>
+            <div className='my-2 text-sm font-bold'>Android</div>
+            <code className='text-sm break-words'>window.Android.deleteDraft(token)</code>
+            <div className='my-2 text-sm font-bold'>iOS</div>
+            <code className='text-sm break-words'>window.webkit.messageHandlers.deleteDraft.postMessage(token)</code>
+
+            <div>
+              <button onClick={handleDeleteDraft} class="rounded-md p-2 w-full mt-4 text-white bg-blue-500 hover:bg-blue-600 active:bg-blue-700">
+                Try Delete Draft
+              </button>
+            </div>
+          </div>
+
+          <div className="rounded-md shadow-md p-4 w-full bg-white">
+            <div className="text-1xl font-bold">Custom Event</div>
+            <div className='text-sm break-workds mb-4'>Dispatch CustomEvent REVIEW4_SEND_DRAFTS</div>
+
+            <code className='text-sm break-words'>
                 window.dispatchEvent(new CustomEvent('REVIEW4_SEND_DRAFT', &#123; 'detail': [drafts] &#125;))
+            </code>
+
+            <div className='flex flex-row gap-2'>
+              <button onClick={handleDispatchEvent} class="rounded-md p-2 w-full mt-4 text-white bg-blue-500 hover:bg-blue-600 active:bg-blue-700">
+                Dispatch
+              </button>
+              <button onClick={handleResetDrafts} class="rounded-md p-2 w-full mt-4 text-white bg-blue-500 hover:bg-blue-600 active:bg-blue-700">
+                Reset
+              </button>
             </div>
             
-            <br></br>
-            <div><strong>Draft Will Be Listed Below</strong></div>
+            <div className='text-1xl font-bold my-4'>Draft Will Be Listed Below</div>
             <div>
               {drafts.length > 0 ? 
-              <ol>
+              <ol className='list-decimal px-4'>
                 {drafts.map(item => (
                   <li key={item.token}>{item.token} -  Average Rating: {item.averageRatingValue}</li>
                 ))}
               </ol> : <div className='code'>No List From CustomEvent / No Custom Event Dispatched</div>
               }
             </div>
-          </a>
+          </div>
+          
         </div>
-      </main>
-
-      <footer>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel" className="logo" />
-        </a>
-      </footer>
-
-      <style jsx>{`
-        .container {
-          min-height: 100vh;
-          padding: 0 0.5rem;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-        }
-
-        main {
-          padding: 5rem 0;
-          flex: 1;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-        }
-
-        footer {
-          width: 100%;
-          height: 100px;
-          border-top: 1px solid #eaeaea;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
-
-        footer img {
-          margin-left: 0.5rem;
-        }
-
-        footer a {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
-
-        a {
-          color: inherit;
-          text-decoration: none;
-        }
-
-        .title a {
-          color: #0070f3;
-          text-decoration: none;
-        }
-
-        .title a:hover,
-        .title a:focus,
-        .title a:active {
-          text-decoration: underline;
-        }
-
-        .title {
-          margin: 0;
-          line-height: 1.15;
-          font-size: 3rem;
-        }
-
-        .title,
-        .description {
-          text-align: center;
-        }
-
-        .description {
-          line-height: 1.5;
-          font-size: 1.5rem;
-        }
-
-        .code {
-          background: #fafafa;
-          border-radius: 5px;
-          padding: 0.75rem;
-          font-size: 1.1rem;
-          font-family: Menlo, Monaco, Lucida Console, Liberation Mono,
-            DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace;
-        }
-
-        .grid {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          flex-wrap: wrap;
-
-          max-width: 800px;
-          margin-top: 3rem;
-        }
-
-        .card {
-          margin: 1rem;
-          flex-basis: 45%;
-          padding: 1.5rem;
-          text-align: left;
-          color: inherit;
-          text-decoration: none;
-          border: 1px solid #eaeaea;
-          border-radius: 10px;
-          transition: color 0.15s ease, border-color 0.15s ease;
-        }
-
-        .card:hover,
-        .card:focus,
-        .card:active {
-          color: #0070f3;
-          border-color: #0070f3;
-        }
-
-        .card h3 {
-          margin: 0 0 1rem 0;
-          font-size: 1.5rem;
-        }
-
-        .card p {
-          margin: 0;
-          font-size: 1.25rem;
-          line-height: 1.5;
-        }
-
-        .logo {
-          height: 1em;
-        }
-
-        @media (max-width: 600px) {
-          .grid {
-            width: 100%;
-            flex-direction: column;
-          }
-        }
-      `}</style>
-
-      <style jsx global>{`
-        html,
-        body {
-          padding: 0;
-          margin: 0;
-          font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
-            Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
-            sans-serif;
-        }
-
-        * {
-          box-sizing: border-box;
-        }
-      `}</style>
+      </div>
     </div>
   )
 }
