@@ -23,7 +23,6 @@ export default function Home() {
   }
 
   const handleSaveDraft = (e) => {
-    console.log('save')
     if(!!window.Android) {
       window.Android.saveDraft(fakedraft)
     }
@@ -34,8 +33,6 @@ export default function Home() {
   }
 
   const handleDeleteDraft = (e) => {
-    
-    console.log('delete')
     if(!!window.Android) {
       window.Android.deleteDraft(fakedraft.token)
     }
@@ -108,7 +105,7 @@ export default function Home() {
               {drafts.length > 0 ? 
               <ol className='list-decimal px-4'>
                 {drafts.map(item => (
-                  <li key={item.token}>{item.token} -  Average Rating: {item.averageRatingValue}</li>
+                  <li key={item.token}>{item.token} -  Average Rating: {item.averageRating}</li>
                 ))}
               </ol> : <div className='code'>No List From CustomEvent / No Custom Event Dispatched</div>
               }
