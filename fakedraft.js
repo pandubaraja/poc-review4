@@ -1,4 +1,5 @@
 export const fakedraft = {
+  "initial": true,
   "accountId": "123",
   "token": "0987654322",
   "allRating": 4,
