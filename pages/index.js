@@ -32,13 +32,13 @@ export default function Home() {
     }
   }
 
-  const handleDeleteDraft = (e) => {
+  const handleRemoveDraft = (e) => {
     if(!!window.Android) {
-      window.Android.deleteDraft(fakedraft.token)
+      window.Android.removeDraft(fakedraft.token)
     }
 
     if(!!window.webkit) {
-      window.webkit.messageHandlers.deleteDraft.postMessage(fakedraft.token)
+      window.webkit.messageHandlers.removeDraft.postMessage(fakedraft.token)
     }
   }
 
@@ -77,7 +77,7 @@ export default function Home() {
             <code className='text-sm break-words'>window.webkit.messageHandlers.deleteDraft.postMessage(token)</code>
 
             <div>
-              <button onClick={handleDeleteDraft} class="rounded-md p-2 w-full mt-4 text-white bg-blue-500 hover:bg-blue-600 active:bg-blue-700">
+              <button onClick={handleRemoveDraft} class="rounded-md p-2 w-full mt-4 text-white bg-blue-500 hover:bg-blue-600 active:bg-blue-700">
                 Try Delete Draft
               </button>
             </div>
