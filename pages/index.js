@@ -4,6 +4,9 @@ import { fakedraft } from '../fakedraft'
 
 export default function Home() {
   const [drafts, setDrafts] = useState([])
+  const [token, setToken] = useState(fakedraft.token)
+  const [accountId, setAccountId] = useState(fakedraft.accountId)
+
   const CUSTOM_EVENT_NAME = 'REVIEW4_SEND_DRAFTS'
 
   useEffect(() => {
@@ -23,6 +26,9 @@ export default function Home() {
   }
 
   const handleSaveDraft = (e) => {
+    fakedraft.accountId = accountId
+    fakedraft.token = token
+
     if(!!window.Android) {
       window.Android.saveDraft(JSON.stringify(fakedraft))
     }
@@ -33,6 +39,9 @@ export default function Home() {
   }
 
   const handleRemoveDraft = (e) => {
+    fakedraft.accountId = accountId
+    fakedraft.token = token
+
     if(!!window.Android) {
       window.Android.removeDraft(fakedraft.token)
     }
@@ -61,7 +70,16 @@ export default function Home() {
             <code className='text-sm break-words'>window.Android.saveDraft(entity)</code>
             <div className='my-2 text-sm font-bold'>iOS</div>
             <code className='text-sm break-words'>window.webkit.messageHandlers.saveDraft.postMessage(entity)</code>
-
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <div className='my-2 text-sm font-bold'>Token</div>
+                <input value={token} onChange={ e => setToken(e.target.value) } className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text"/>
+              </div>
+              <div>
+                <div className='my-2 text-sm font-bold'>Account Id</div>
+                <input value={accountId} onChange={ e => setAccountId(e.target.value) } className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text"/>
+              </div>
+            </div>
             <div>
               <button onClick={handleSaveDraft} className="rounded-md p-2 w-full mt-4 text-white bg-blue-500 hover:bg-blue-600 active:bg-blue-700">
                 Try Save Draft
@@ -75,10 +93,19 @@ export default function Home() {
             <code className='text-sm break-words'>window.Android.deleteDraft(token)</code>
             <div className='my-2 text-sm font-bold'>iOS</div>
             <code className='text-sm break-words'>window.webkit.messageHandlers.deleteDraft.postMessage(token)</code>
-
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <div className='my-2 text-sm font-bold'>Token</div>
+                <input value={token} onChange={ e => setToken(e.target.value) } className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text"/>
+              </div>
+              <div>
+                <div className='my-2 text-sm font-bold'>Account Id</div>
+                <input value={accountId} onChange={ e => setAccountId(e.target.value) } className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text"/>
+              </div>
+            </div>
             <div>
               <button onClick={handleRemoveDraft} class="rounded-md p-2 w-full mt-4 text-white bg-blue-500 hover:bg-blue-600 active:bg-blue-700">
-                Try Delete Draft
+                Try Remove Draft
               </button>
             </div>
           </div>
