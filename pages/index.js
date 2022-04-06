@@ -24,7 +24,7 @@ export default function Home() {
 
   const handleSaveDraft = (e) => {
     if(!!window.Android) {
-      window.Android.saveDraft(fakedraft)
+      window.Android.saveDraft(JSON.stringify(fakedraft))
     }
 
     if(!!window.webkit) {
