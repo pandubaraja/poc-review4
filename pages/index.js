@@ -1,21 +1,33 @@
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
 import Head from 'next/head'
 import { fakedraft } from '../fakedraft'
 
 export default function Home() {
   const [drafts, setDrafts] = useState([])
   const [token, setToken] = useState(fakedraft.token)
+  const [allRating, setAllRating] = useState(fakedraft.allRating)
   const [accountId, setAccountId] = useState(fakedraft.accountId)
-
+  const router = useRouter()
   const CUSTOM_EVENT_NAME = 'REVIEW4_SEND_DRAFTS'
 
+  const customEventListener = function(e) {
+    setDrafts([
+      ...e.detail
+    ])
+  }
+
+
   useEffect(() => {
-    window.addEventListener(CUSTOM_EVENT_NAME, function(e) {
-      setDrafts([
-        ...e.detail
-      ])
-    })
-  })
+    if(!router.isReady) return;
+
+    setToken(router.query.token || fakedraft.token)
+    setAccountId(router.query.accountId || fakedraft.accountId)
+
+    window.removeEventListener(CUSTOM_EVENT_NAME, customEventListener)
+    window.addEventListener(CUSTOM_EVENT_NAME, customEventListener)
+
+  }, [router.isReady])
 
   const handleDispatchEvent = (e) => {
     window.dispatchEvent(new CustomEvent(CUSTOM_EVENT_NAME, { detail: [fakedraft]}))
@@ -28,6 +40,7 @@ export default function Home() {
   const handleSaveDraft = (e) => {
     fakedraft.accountId = accountId
     fakedraft.token = token
+    fakedraft.allRating = allRating
 
     if(!!window.Android) {
       window.Android.saveDraft(JSON.stringify(fakedraft))
@@ -70,10 +83,14 @@ export default function Home() {
             <code className='text-sm break-words'>window.Android.saveDraft(entity)</code>
             <div className='my-2 text-sm font-bold'>iOS</div>
             <code className='text-sm break-words'>window.webkit.messageHandlers.saveDraft.postMessage(entity)</code>
+            <div>
+              <div className='my-2 text-sm font-bold'>Token</div>
+              <input value={token} onChange={ e => setToken(e.target.value) } className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text"/>
+            </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <div className='my-2 text-sm font-bold'>Token</div>
-                <input value={token} onChange={ e => setToken(e.target.value) } className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text"/>
+                <div className='my-2 text-sm font-bold'>All Rating</div>
+                <input value={allRating} onChange={ e => setAllRating(e.target.value) } className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text"/>
               </div>
               <div>
                 <div className='my-2 text-sm font-bold'>Account Id</div>
@@ -104,7 +121,7 @@ export default function Home() {
               </div>
             </div>
             <div>
-              <button onClick={handleRemoveDraft} class="rounded-md p-2 w-full mt-4 text-white bg-blue-500 hover:bg-blue-600 active:bg-blue-700">
+              <button onClick={handleRemoveDraft} className="rounded-md p-2 w-full mt-4 text-white bg-blue-500 hover:bg-blue-600 active:bg-blue-700">
                 Try Remove Draft
               </button>
             </div>
@@ -119,10 +136,10 @@ export default function Home() {
             </code>
 
             <div className='flex flex-row gap-2'>
-              <button onClick={handleDispatchEvent} class="rounded-md p-2 w-full mt-4 text-white bg-blue-500 hover:bg-blue-600 active:bg-blue-700">
+              <button onClick={handleDispatchEvent} className="rounded-md p-2 w-full mt-4 text-white bg-blue-500 hover:bg-blue-600 active:bg-blue-700">
                 Dispatch
               </button>
-              <button onClick={handleResetDrafts} class="rounded-md p-2 w-full mt-4 text-white bg-blue-500 hover:bg-blue-600 active:bg-blue-700">
+              <button onClick={handleResetDrafts} className="rounded-md p-2 w-full mt-4 text-white bg-blue-500 hover:bg-blue-600 active:bg-blue-700">
                 Reset
               </button>
             </div>
