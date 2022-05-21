@@ -64,6 +64,16 @@ export default function Home() {
     }
   }
 
+  const handleReviewSubmitted = (e) => {
+    if(!!window.Android) {
+      window.Android.reviewSubmitted()
+    }
+
+    if(!!window.webkit) {
+      window.webkit.messageHandlers.reviewSubmitted.postMessage()
+    }
+  }
+
   return (
     <div>
       <Head>
@@ -77,6 +87,9 @@ export default function Home() {
         </div>
 
         <div className="flex flex-col gap-4">
+          <button onClick={reviewSubmitted} className="rounded-md p-2 w-full mt-4 text-white bg-blue-500 hover:bg-blue-600 active:bg-blue-700">
+            Review Submitted
+          </button>
           <div className="rounded-md shadow-md p-4 w-full bg-white">
             <div className="text-1xl font-bold">Save Draft</div>
             <div className='my-2 text-sm font-bold'>Android</div>
