@@ -87,7 +87,7 @@ export default function Home() {
         </div>
 
         <div className="flex flex-col gap-4">
-          <button onClick={reviewSubmitted} className="rounded-md p-2 w-full mt-4 text-white bg-blue-500 hover:bg-blue-600 active:bg-blue-700">
+          <button onClick={handleReviewSubmitted} className="rounded-md p-2 w-full mt-4 text-white bg-blue-500 hover:bg-blue-600 active:bg-blue-700">
             Review Submitted
           </button>
           <div className="rounded-md shadow-md p-4 w-full bg-white">
